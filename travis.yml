@@ -1,0 +1,8 @@
+language: java
+deploy:
+ provider: heroku
+ api-key: 75eb7083-846c-47d3-af35-9c43b85f51b3
+  secure: $HEROKU_API_KEY
+ app: wepanews
+
+
