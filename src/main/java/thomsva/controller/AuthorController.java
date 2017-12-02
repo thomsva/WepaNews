@@ -21,6 +21,7 @@ public class AuthorController {
     public String addAuthor(@RequestParam String name){
         Author author=new Author();
         author.setName(name);
+        authorRepository.save(author);
         return "redirect:/authors"; 
     }
     
