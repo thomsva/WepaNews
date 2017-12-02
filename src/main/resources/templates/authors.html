@@ -1,17 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Authors</title>
+    <head th:replace="page-template :: head">
+        <title>WepaNews</title>
     </head>
-    <body>
+    <nav th:replace="page-template :: topmenu">
+
+    </nav>
+
+
+    <body class="container">
+
         <h1>Authors</h1>
 
         <h2>Add new author</h2>
 
         <div>
             Enter information and press submit:<br/>
-            <form action="/actors" method="POST">
+            <form action="/authors" method="POST">
                 Name: <input type="text" name="name" id="name"/><br/>
                 <input type="submit"/>
             </form>
@@ -30,7 +35,6 @@
 
             </li>
         </ol>
-
 
     </body>
 </html>
