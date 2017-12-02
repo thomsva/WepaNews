@@ -9,14 +9,15 @@ import javax.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Author {
-    private Long id;
+public class Author extends AbstractPersistable<Long>{
+    
     private String name; 
     
     @ManyToMany(mappedBy = "authors")

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Authors</title>
+    </head>
+    <body>
+        <h1>Authors</h1>
+
+        <h2>Add new author</h2>
+
+        <div>
+            Enter information and press submit:<br/>
+            <form action="/actors" method="POST">
+                Name: <input type="text" name="name" id="name"/><br/>
+                <input type="submit"/>
+            </form>
+        </div>
+
+        <h2>Existing Authors</h2>
+
+        <ol>
+            <li th:each="author : ${authors}">
+                <a th:href="@{/author/{authorId}(authorId=${author.id})}" th:text="${author.name}">author name</a>
+
+                <form th:action="@{/author/{authorId}(authorId=${author.id})}" th:method="DELETE">
+                    <input type="submit" value="Remove" th:id="${'remove-' + author.id}"/>
+                </form><br/>
+
+
+            </li>
+        </ol>
+
+
+    </body>
+</html>

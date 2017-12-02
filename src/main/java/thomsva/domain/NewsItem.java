@@ -9,6 +9,7 @@ import javax.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 
 //id, heading, picture, lede, 
@@ -18,8 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class NewsItem {
-    private Long id;
+public class NewsItem extends AbstractPersistable<Long>{
+    
     private String heading;
     @Lob
     private byte[] picture;

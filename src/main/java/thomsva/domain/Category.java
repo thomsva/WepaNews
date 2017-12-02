@@ -3,20 +3,18 @@ package thomsva.domain;
 
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Category {
+public class Category extends AbstractPersistable<Long> {
     
-    @Id
-    private Long id;
     private String name; 
     
     @ManyToMany(mappedBy = "categories")
