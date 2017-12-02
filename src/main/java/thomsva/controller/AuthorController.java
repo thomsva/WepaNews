@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import thomsva.domain.Author;
 import thomsva.repository.AuthorRepository;
 
@@ -28,6 +29,18 @@ public class AuthorController {
         List<Author> authors=authorRepository.findAll();
         model.addAttribute(authors);
         return "authors";
+    }
+    
+    @GetMapping("/test")
+    @ResponseBody
+    public String showHW(){
+        return "It works";
+    }
+    
+    @GetMapping("/")
+    @ResponseBody
+    public String home() {
+        return "Hello World!";
     }
     
     

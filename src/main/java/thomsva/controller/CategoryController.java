@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import thomsva.repository.CategoryRepository;
 
-@Controller
+
 public class CategoryController {
     
     @Autowired
