@@ -24,7 +24,8 @@ public class Author extends AbstractPersistable<Long>{
     private List<NewsItem> newsItems;
     
     private String password;
-    private Boolean admin;
+    
+    private Boolean chiefEditor;
     
    
     

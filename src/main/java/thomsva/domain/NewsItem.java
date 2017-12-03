@@ -34,6 +34,7 @@ public class NewsItem extends AbstractPersistable<Long>{
     
     @ManyToMany
     private List<Author> authors;
-      
     
+    private boolean approved;
+      
 }
