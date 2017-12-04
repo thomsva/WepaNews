@@ -27,7 +27,7 @@
                     <form th:if="${authorSignedIn.chiefEditor==true && author.chiefEditor==true}" th:action="${'/author/'+author.id+'/demote'}" th:method="POST">
                         <input type="submit" value="Alenna" th:id="${'remove-' + author.id}"/>
                     </form>
-                    <form th:if="${authorSignedIn.chiefEditor && !author.chiefEditor}" th:action="${'/author/'+author.id+'/promote'}" th:method="POST">
+                    <form th:if="${authorSignedIn.chiefEditor ==true && author.chiefEditor != true}" th:action="${'/author/'+author.id+'/promote'}" th:method="POST">
                         <input type="submit" value="Ylennä" th:id="${'remove-' + author.id}"/>
                     </form>
                 </td>
