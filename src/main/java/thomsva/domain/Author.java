@@ -27,7 +27,7 @@ public class Author extends AbstractPersistable<Long>{
     private String password;
     private String verifyPassword;
     
-    private Boolean chiefEditor;
+    private Boolean chiefEditor=false;
     
 
     

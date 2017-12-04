@@ -4,7 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,9 +18,6 @@ import thomsva.service.AuthenticationService;
 
 @Controller
 public class AuthorController {
-
-
-
 
     @Autowired
     private AuthorRepository authorRepository;
@@ -91,6 +90,22 @@ public class AuthorController {
         authenticationService.logout();
         model.addAttribute("message", "Olet kirjautunut ulos.");
         return "login";
+    }
+
+    @DeleteMapping("/author/{id}")
+    public String removeAuthor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Author author = authorRepository.getOne(id);
+        if (author.getNewsItems().isEmpty() && authenticationService.authorSignedIn().getChiefEditor()) {
+            authorRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("message", "Kirjoittajan poisto onnistui.");
+        } else {
+            if (!authenticationService.authorSignedIn().getChiefEditor()) {
+                redirectAttributes.addFlashAttribute("error", "Vain päätoimittajat voivat poistaa kirjoittajia.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Kirjoittajaa ei voi poistaa koska kirjoittajalla on uutisia.");
+            }
+        }
+        return "redirect:/author";
     }
 
 }

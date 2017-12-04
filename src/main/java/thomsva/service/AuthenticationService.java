@@ -1,6 +1,7 @@
 
 package thomsva.service;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,18 @@ public class AuthenticationService {
     
     @Autowired
     private AuthorRepository authorRepository;
+    
+    @PostConstruct
+    public void postConstruct() {
+        if(authorRepository.findBychiefEditor(true)==null){
+            Author author=new Author();
+            author.setName("Admin");
+            author.setPassword("123");
+            author.setVerifyPassword("123");
+            author.setChiefEditor(true);
+            authorRepository.save(author);
+        }
+    }
     
     public String nameSignedIn(){
         return (String) session.getAttribute("nameSignedIn");
