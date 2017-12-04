@@ -20,7 +20,7 @@
                 <td th:text="${author.name}">author name</td>
                 <td>
                     <span th:if="${author.chiefEditor}">Päätoimittaja</span>
-                    <span th:if="${!author.chiefEditor}">Kirjoittaja</span>
+                    <span th:if="${author.chiefEditor != true}">Kirjoittaja</span>
                 </td>
                 <td th:text="${'Uutisia: ' + #lists.size(author.newsItems)}">newscount</td>
                 <td th:if="${authorSignedIn != null}">
