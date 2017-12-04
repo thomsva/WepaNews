@@ -11,16 +11,32 @@
         <div th:replace="page-template :: error"></div>
         <div th:replace="page-template :: message"></div>
 
-        <h1>Signup as a new author</h1>
+        <h1>Rekisteröidy kirjoittajaksi</h1>
 
         <div>
-            Enter information and press submit:<br/>
+            <p>Täytä kentät ja valitse lähetä</p>
+            
             <form action="/author/signup" method="POST" >
-                Name: <input type="text" name="name" id="name"/><br>
-                Password: <input type="text" name="password" id="password"/><br>
-                Verify Password: <input type="text" name="verifyPassword" id="verifyPassword"/><br>
+                <table class="table">
+                    <tr>
+                        <td>Nimi</td>                      
+                        <td><input type="text" name="name" id="name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Salasana</td>                      
+                        <td><input type="text" name="password" id="password"/></td>
+                    </tr>
+                    <tr>
+                        <td>Salasana uudestaan</td>                      
+                        <td><input type="text" name="verifyPassword" id="verifyPassword"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><input type="submit" value="Lähetä"></td>
+                    </tr>
+
                 <br>
-                <input type="submit"/>
+                
+            </table>
             </form>
         </div>
 
