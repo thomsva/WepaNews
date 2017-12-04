@@ -23,10 +23,10 @@
                         <li>
                             <a href="/author">Authors</a>
                         </li>
-                        <li>
+                        <li th:if="${authorSignedIn == null}">
                             <a href="/author/signup">Signup</a>
                         </li>
-                        <li>
+                        <li th:if="${authorSignedIn == null}">
                             <a href="/author/login">Login</a>
                         </li>
                     </ul>
