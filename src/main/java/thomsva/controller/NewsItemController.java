@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +45,10 @@ public class NewsItemController {
         return "newsitem";
     }
     
+    @Transactional
     @GetMapping(path = "/newsitem/{id}/picture", produces = "image/jpg")
     @ResponseBody
-    public byte[] get(@PathVariable Long id) {
+    public byte[] getPicture(@PathVariable Long id) {
         return newsItemRepository.getOne(id).getPicture();
     }
     
