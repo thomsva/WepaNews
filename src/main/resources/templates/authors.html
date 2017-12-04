@@ -11,22 +11,36 @@
         <div th:replace="page-template :: message"></div>
 
 
-        <h1>Existing Authors</h1>
+        <h1>Nykyiset kirjoittajat</h1>
+        
+        
 
-        <ol>
-            <li th:each="author : ${authors}">
-                <a th:href="@{/author/{authorId}(authorId=${author.id})}" th:text="${author.name}">author name</a><br>
-                    Päätoimittajan oikeudet: <span th:text="${author.chiefEditor}"></span><br>
+        <table class="table">
+            <tr th:each="author : ${authors}">
+                <td th:text="${author.name}">author name</td>
+                <td>
+                    <span th:if="${author.chiefEditor}">Päätoimittaja</span>
+                    <span th:if="${!author.chiefEditor}">Kirjoittaja</span>
+                </td>
+                <td th:text="${'Uutisia: ' + #lists.size(author.newsItems)}">newscount</td>
+                <td th:if="${authorSignedIn != null}">
+                    <form th:if="${authorSignedIn.chiefEditor && author.chiefEditor}" th:action="${'/author/'+author.id+'/demote'}" th:method="POST">
+                        <input type="submit" value="Alenna" th:id="${'remove-' + author.id}"/>
+                    </form>
+                    <form th:if="${authorSignedIn.chiefEditor && !author.chiefEditor}" th:action="${'/author/'+author.id+'/promote'}" th:method="POST">
+                        <input type="submit" value="Ylennä" th:id="${'remove-' + author.id}"/>
+                    </form>
+                </td>
+                <td th:if="${authorSignedIn != null}">
+                    <form th:if="${authorSignedIn.chiefEditor && author.newsItems.isEmpty()}" th:action="${'/author/'+ author.id}" th:method="DELETE">
+                        <input type="submit" value="Poista kirjoittaja" th:id="${'remove-' + author.id}"/>
+                    </form>
+                </td>
+
+            </tr>
+        </table>
 
 
-                <form th:if="${author.newsItems.isEmpty()}" th:action="@{/author/{authorId}(authorId=${author.id})}" th:method="DELETE">
-                    <input type="submit" value="Remove" th:id="${'remove-' + author.id}"/>
-                </form><br/>
-
-
-
-            </li>
-        </ol>
 
     </body>
 </html>

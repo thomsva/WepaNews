@@ -1,4 +1,3 @@
-
 package thomsva.service;
 
 import javax.annotation.PostConstruct;
@@ -10,17 +9,17 @@ import thomsva.repository.AuthorRepository;
 
 @Service
 public class AuthenticationService {
-    
+
     @Autowired
     private HttpSession session;
-    
+
     @Autowired
     private AuthorRepository authorRepository;
-    
+
     @PostConstruct
     public void postConstruct() {
-        if(authorRepository.findBychiefEditor(true)==null){
-            Author author=new Author();
+        if (authorRepository.findBychiefEditor(true).size() == 0) {
+            Author author = new Author();
             author.setName("Admin");
             author.setPassword("123");
             author.setVerifyPassword("123");
@@ -28,30 +27,28 @@ public class AuthenticationService {
             authorRepository.save(author);
         }
     }
-    
-    public String nameSignedIn(){
+
+    public String nameSignedIn() {
         return (String) session.getAttribute("nameSignedIn");
     }
-    
-    public Author authorSignedIn(){
+
+    public Author authorSignedIn() {
         return authorRepository.findByName((String) session.getAttribute("nameSignedIn"));
     }
-    
-    public boolean login(String name, String password){
-        Author author=authorRepository.findByName(name);
-        if (author.getPassword().equals(password)){
-            session.setAttribute("nameSignedIn", name);
-            return true;
+
+    public boolean login(String name, String password) {
+        Author author = authorRepository.findByName(name);
+        if (author != null) {
+            if (author.getPassword().equals(password)) {
+                session.setAttribute("nameSignedIn", name);
+                return true;
+            }
         }
-        return false;        
+        return false;
     }
-    
-    public void logout(){
+
+    public void logout() {
         this.session.invalidate();
     }
-    
-    
 
-    
-    
 }
