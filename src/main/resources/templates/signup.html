@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="page-template :: head">
+        <title>WepaNews</title>
+    </head>
+
+
+
+    <body class="container">
+        <nav th:replace="page-template :: topmenu"></nav>
+        <div th:replace="page-template :: error"></div>
+        <div th:replace="page-template :: message"></div>
+
+        <h1>Signup as a new author</h1>
+
+        <div>
+            Enter information and press submit:<br/>
+            <form action="/author/signup" method="POST" >
+                Name: <input type="text" name="name" id="name"/><br>
+                Password: <input type="text" name="password" id="password"/><br>
+                Verify Password: <input type="text" name="verifyPassword" id="verifyPassword"/><br>
+                <br>
+                <input type="submit"/>
+            </form>
+        </div>
+
+        
+
+    </body>
+</html>

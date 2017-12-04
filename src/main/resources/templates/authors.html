@@ -5,23 +5,13 @@
     </head>
 
 
-
     <body class="container">
         <nav th:replace="page-template :: topmenu"></nav>
+        <div th:replace="page-template :: error"></div>
+        <div th:replace="page-template :: message"></div>
 
-        <h1>Authors</h1>
 
-        <h2>Add new author</h2>
-
-        <div>
-            Enter information and press submit:<br/>
-            <form action="/authors" method="POST">
-                Name: <input type="text" name="name" id="name"/><br/>
-                <input type="submit"/>
-            </form>
-        </div>
-
-        <h2>Existing Authors</h2>
+        <h1>Existing Authors</h1>
 
         <ol>
             <li th:each="author : ${authors}">

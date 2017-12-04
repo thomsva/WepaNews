@@ -3,6 +3,7 @@ package thomsva.domain;
 
 //(id, name, newsitems, password, admin)
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -24,9 +25,10 @@ public class Author extends AbstractPersistable<Long>{
     private List<NewsItem> newsItems;
     
     private String password;
+    private String verifyPassword;
     
     private Boolean chiefEditor;
     
-   
+
     
 }
