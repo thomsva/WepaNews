@@ -2,55 +2,71 @@
 <html>
     <head th:fragment="page-template :: head">
         <title>WepaNews</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
 
 
     <body>
-        <nav class="navbar navbar-inverse bg-inverse" th:fragment="topmenu">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">WepaNews</a>
-            </div>
+        <nav class="navbar navbar-inverse"  th:fragment="topmenu" >
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">WepaNews</a>
+                </div>
+                <ul class="nav navbar-nav">              
+                    <li><a href="/author"><span class="glyphicon glyphicon glyphicon-user"></span> Kirjoittajat</a></li>
+                    <li><a href="/category"><span class="glyphicon glyphicon glyphicon-tags"></span> Kategoriat</a></li>
+                    <li><a href="/newsitem"><span class="glyphicon glyphicon glyphicon-list-alt"></span> Uutiset</a></li>
+                </ul>
+                
+                
+                <ul class="nav navbar-nav navbar-right">
+                    <li th:if="${authorSignedIn == null}">
+                        <a href="/author/signup">
+                            <span class="glyphicon glyphicon-user"></span> Sign Up
+                        </a>
+                    </li>
+                    <li th:if="${authorSignedIn == null}">
+                        <a href="/author/login">
+                            <span class="glyphicon glyphicon-log-in"></span> Login
+                        </a>
+                    </li>
 
-            <div class="collapse navbar-collapse">
-                <span>
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="/">Home</a>
-                        </li>
-                        <li>
-                            <a href="/author">Authors</a>
-                        </li>
-                        <li>
-                            <a href="/category">Categories</a>
-                        </li>
-                        <li>
-                            <a href="/newsitem">News Items</a>
-                        </li>
-                        <li th:if="${authorSignedIn == null}">
-                            <a href="/author/signup">Signup</a>
-                        </li>
-                        <li th:if="${authorSignedIn == null}">
-                            <a href="/author/login">Login</a>
-                        </li>
-                    </ul>
-                </span>
 
-                <span >
-                    <ul class="nav navbar-nav" style="float:right">
-                        <li>
-                            <a th:if="${authorSignedIn != null}" th:href="${'/author/' +authorSignedIn.id + '/password'}">Vaihda salasana</a>
-                        </li>
-                        <li>
-                            <a th:if="${authorSignedIn != null}" href="/author/logout" th:text="${'Kirjaudu ulos ' + authorSignedIn.name}">Logout</a>
-                        </li>
-                    </ul>
-                </span>
+                    <li class="dropdown" th:if="${authorSignedIn != null}">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><span th:text="${authorSignedIn.name}"></span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="${'/author/' +authorSignedIn.id + '/password'}">
+                                    <span class="glyphicon glyphicon-edit"></span> Vaihda salasana</a>
+                            </li>
+                            <li>
+                                <a href="/author/logout" >
+                                    <span class="glyphicon glyphicon-log-out"></span> Kirjaudu ulos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/newsitem/">
+                                    <span class="glyphicon glyphicon-folder-open"></span> Omat kirjoitukset
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li th:if="${authorSignedIn != null}">
+
+
+                    </li>
+                </ul>
 
             </div>
         </nav>
+
+
+
 
         <div class="alert alert-danger"  th:if="${error != null}" th:text="${error}" th:fragment="error">
             Error message comes here

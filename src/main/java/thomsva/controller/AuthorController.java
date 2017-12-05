@@ -41,6 +41,7 @@ public class AuthorController {
     @PostMapping("/author/signup")
     public String addAuthor(
             RedirectAttributes redirectAttributes,
+            Model model,
             @RequestParam String name,
             @RequestParam String password,
             @RequestParam String verifyPassword) {
@@ -52,7 +53,7 @@ public class AuthorController {
         boolean valid = true;
         if (!author.getPassword().equals(author.getVerifyPassword())) {
             valid = false;
-            redirectAttributes.addFlashAttribute("error", "Salasanat eivät täsmää.");
+            model.addAttribute("error", "Salasanat eivät täsmää.");
         }
         if (valid) {
             redirectAttributes.addFlashAttribute("message", "Käyttäjäksi rekisteröinti onnistui.");
