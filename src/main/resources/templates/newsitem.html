@@ -21,8 +21,9 @@
         </p>
 
 
+
         <form action="/newsitem" method="POST" enctype="multipart/form-data" >
-            
+
             <table class="table">
                 <tr>
                     <td>Heading</td>
@@ -62,7 +63,25 @@
                         </div>
                     </div>
                 </td>
-                <td><span th:each="author : ${newsItem.authors}" th:text="${author.name}"></span></td>   
+                <td>
+
+                    <span th:each="author : ${newsItem.authors}">
+                        <form th:action="${'/newsitem/' + newsItem.id + '/author/'+ author.id}" th:method="DELETE">
+                            <button  class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                <span th:text="${author.name}" ></span>
+                            </button>
+                            
+                        </form>
+                    </span>
+
+                </td>
+                <td><span th:each="author : ${newsItem.authors}"></span></td>  
+                <td><button th:text="${'X'}" class="glyhicon glyphicon-remove">
+                        <span th:each="author : ${newsItem.authors}" th:text="${author.name}" type="button" class="btn">                 
+                            <button th:text="${'X'}" class="glyhicon glyphicon-remove">
+                        </span>
+                </td>
             </tr>
 
         </table>
