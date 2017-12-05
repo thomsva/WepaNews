@@ -22,6 +22,7 @@
 
 
         <form action="/newsitem" method="POST" enctype="multipart/form-data" >
+            
             <table class="table">
                 <tr>
                     <td>Heading</td>
@@ -39,27 +40,10 @@
                 </tr>
                 <tr>
                     <td>Picture</td>
-                    <td><input class="form-control" type="file" name="picture" id="picture"/></td>
+                    <td><input class="form-control" type="file" name="picture" id="picture" /></td>
                 </tr>
                 <tr>
-                    <td>Valitse kirjoittajat</td>
-                    <td>
-                        <select multiple class="form-control" id="authorids">
-                            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}" >Author name</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Valitse kategoriat</td>
-                    <td>
-                        <select multiple class="form-control" id="categoryids">
-                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category name</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" value="Lähetä"/></td>
-
+                    <td colspan="2"><input type="submit" value="Lähetä" class="btn"/></td>
                 </tr>
 
             </table>
@@ -77,10 +61,8 @@
                             <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
                         </div>
                     </div>
-
-
-
                 </td>
+                <td><span th:each="author : ${newsItem.authors}" th:text="${author.name}"></span></td>   
             </tr>
 
         </table>

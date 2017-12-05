@@ -51,10 +51,7 @@ public class NewsItemController {
             model.addAttribute("newsItems", newsItemRepository.findAll());
             model.addAttribute("authors", authorRepository.findAll());
             model.addAttribute("categories", categoryRepository.findAll());
-            //model.addAttribute("selecedAuthors", new ArrayList<>(Arrays.asList("2w","e3")));
-            //model.addAttribute("selecedAuthors", new ArrayList<Author>(Arrays.asList(authenticationService.authorSignedIn())));
-            
-            model.addAttribute("selecedAuthors", selectedAuthors);
+            model.addAttribute("authorSignedIn", authenticationService.authorSignedIn());
             return "newsitem";
         } else {
             model.addAttribute("error", "Kirjaudu ensin sisään.");
@@ -80,8 +77,11 @@ public class NewsItemController {
         newsItem.setPicture(picture.getBytes());
         newsItem.setLede(lede);
         newsItem.setText(text);
+        Author a=authenticationService.authorSignedIn();
+        if (a!=null) newsItem.getAuthors().add(a);
         newsItem.setApproved(false);
         newsItem.setDateTime(LocalDateTime.now());
+        
 
         newsItemRepository.save(newsItem);
         return "redirect:/newsitem";

@@ -17,30 +17,36 @@
         <p>
             Lisää uusi:
         </p>
-        
+
         <form th:action="@{/category}"  th:object="${category}" method="POST">
-            <input th:field="*{id}" type="text">
-            <table class="table">
-                <tr>
-                    <td>Nimi</td>
-                    <td><input type="text" th:field="*{name}"/></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" value="Lähetä"/></td>
-                </tr>
-                
-            </table>
+            <input th:field="*{id}" type="hidden">
+                <table class="table">
+                    <tr>
+                        <td>Nimi</td>
+                        <td><input type="text" th:field="*{name}"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Lähetä" class="btn"/></td>
+                    </tr>
+
+                </table>
         </form>
 
-    
+
 
         <h1>Lista kategorioista</h1>
         <table class="table table-hover">
             <tr th:each="category : ${categories}">
                 <td><a th:href="${'/category/'+category.id}" th:text="${category.name}"></a></td>
-                <td><form th:if="${category.newsItems.isEmpty()}" th:action="${'/category/'+category.id}" th:method="DELETE"><input type="submit" value="Poista"></form></td>
+                <td th:text="${'Uutisia: ' + #lists.size(category.newsItems)}">newscount</td>
+                <td>
+                    <form th:if="${authorSignedIn != null}" th:action="${'/category/'+category.id}" th:method="DELETE">
+                        <input th:if="${category.newsItems.isEmpty()}" type="submit" value="Poista" class="btn btn-xs"/>
+                        <input th:if="${!category.newsItems.isEmpty()}" type="submit" value="Ei voida poistaa" class="btn btn-xs disabled"/>
+                    </form>
+                </td>
             </tr>
-            
+
 
         </table>
 
