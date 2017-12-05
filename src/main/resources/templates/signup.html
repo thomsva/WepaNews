@@ -15,32 +15,34 @@
 
         <div>
             <p>Täytä kentät ja valitse lähetä</p>
-            
+
             <form action="/author/signup" method="POST" >
                 <table class="table">
                     <tr>
                         <td>Nimi</td>                      
-                        <td><input type="text" name="name" id="name"/></td>
+                        <td><input class="form-control" type="text" name="name" id="name"/></td>
                     </tr>
                     <tr>
                         <td>Salasana</td>                      
-                        <td><input type="text" name="password" id="password"/></td>
+                        <td><input class="form-control" type="text" name="password" id="password"/></td>
                     </tr>
                     <tr>
                         <td>Salasana uudestaan</td>                      
-                        <td><input type="text" name="verifyPassword" id="verifyPassword"/></td>
+                        <td><input class="form-control" type="text" name="verifyPassword" id="verifyPassword"/></td>
                     </tr>
+                   
                     <tr>
                         <td colspan="2"><input type="submit" value="Lähetä"></td>
                     </tr>
 
-                <br>
-                
-            </table>
+
+                    <br>
+
+                </table>
             </form>
         </div>
 
-        
+
 
     </body>
 </html>
