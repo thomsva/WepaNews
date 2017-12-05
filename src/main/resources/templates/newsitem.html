@@ -51,7 +51,7 @@
         </form>
 
         <h1>Lista uutisista</h1>
-        <table class="table">
+        <table class="table table-hover">
             <tr th:each="newsItem : ${newsItems}">
                 <td th:text="${newsItem.heading}">Heading</td>
                 <td th:text="${newsItem.lede}">lede</td>
@@ -64,24 +64,53 @@
                     </div>
                 </td>
                 <td>
-
                     <span th:each="author : ${newsItem.authors}">
                         <form th:action="${'/newsitem/' + newsItem.id + '/author/'+ author.id}" th:method="DELETE">
                             <button  class="btn btn-default">
                                 <span class="glyphicon glyphicon-remove"></span>
                                 <span th:text="${author.name}" ></span>
                             </button>
-                            
+
                         </form>
                     </span>
 
                 </td>
-                <td><span th:each="author : ${newsItem.authors}"></span></td>  
-                <td><button th:text="${'X'}" class="glyhicon glyphicon-remove">
-                        <span th:each="author : ${newsItem.authors}" th:text="${author.name}" type="button" class="btn">                 
-                            <button th:text="${'X'}" class="glyhicon glyphicon-remove">
-                        </span>
+                <td>
+                    <span th:each="category : ${newsItem.categories}">
+                        <form th:action="${'/newsitem/' + newsItem.id + '/category/'+ category.id}" th:method="DELETE">
+                            <button  class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                <span th:text="${category.name}" ></span>
+                            </button>
+                        </form>
+                    </span>
+
                 </td>
+                <td>
+                    <form th:action="${'/newsitem/' + newsItem.id +'/author'}" th:method="POST">
+                        <select class="form-control" name="authorId" id="authorId">
+                            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}">Author</option>
+                        </select>
+                        <button  class="btn btn-default">
+                                <span class="glyphicon glyphicon-add"></span>
+                                Lisää kirjoittaja
+                            </button>
+                    </form>
+                </td> 
+                
+                
+                <td>
+                    <form th:action="${'/newsitem/' + newsItem.id +'/category'}" th:method="POST">
+                        <select class="form-control" name="categoryId" id="categoryId">
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category</option>
+                        </select>
+                        <button  class="btn btn-default">
+                                <span class="glyphicon glyphicon-add"></span>
+                                Lisää kategoria
+                            </button>
+                    </form>
+                </td> 
+
             </tr>
 
         </table>

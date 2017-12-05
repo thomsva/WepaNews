@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+
+    <!--Head fragment -->
     <head th:fragment="page-template :: head">
         <title>WepaNews</title>
         <meta charset="utf-8">
@@ -9,20 +11,25 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
 
-
     <body>
+        <!--Menu fragment -->
         <nav class="navbar navbar-inverse"  th:fragment="topmenu" >
             <div class="container-fluid">
+
+                <!-- Service name -->
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/">WepaNews</a>
                 </div>
+
+
+                <!-- Left aligned part of menu -->
                 <ul class="nav navbar-nav">              
                     <li><a href="/author"><span class="glyphicon glyphicon glyphicon-user"></span> Kirjoittajat</a></li>
                     <li><a href="/category"><span class="glyphicon glyphicon glyphicon-tags"></span> Kategoriat</a></li>
                     <li><a href="/newsitem"><span class="glyphicon glyphicon glyphicon-list-alt"></span> Uutiset</a></li>
                 </ul>
-                
-                
+
+                <!-- Right aligned part of menu -->
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${authorSignedIn == null}">
                         <a href="/author/signup">
@@ -54,33 +61,20 @@
                             </li>
                         </ul>
                     </li>
-
-
-                    <li th:if="${authorSignedIn != null}">
-
-
-                    </li>
                 </ul>
 
             </div>
         </nav>
 
-
-
-
+        <!--Error message fragment -->
         <div class="alert alert-danger"  th:if="${error != null}" th:text="${error}" th:fragment="error">
             Error message comes here
         </div>
+
+        <!--Message fragment -->
         <div class="alert alert-success"  th:if="${message != null}" th:text="${message}" th:fragment="message">
             Message comes here
         </div>
-
-
-
-
-
-
-
 
     </body>
 </html>

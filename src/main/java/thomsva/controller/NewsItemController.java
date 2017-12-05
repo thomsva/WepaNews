@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import thomsva.domain.Author;
+import thomsva.domain.Category;
 import thomsva.domain.NewsItem;
 import thomsva.repository.CategoryRepository;
 
@@ -106,9 +107,58 @@ public class NewsItemController {
         }
         newsItemRepository.save(n);
         redirectAttributes.addFlashAttribute("message", "Kirjoittajan poisto artikkelista onnistui!");
-        redirectAttributes.addAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
         
         return "redirect:/newsitem";
     }
+    
+    @PostMapping("/newsitem/{newsId}/author")
+    public String addAuthorToNewsItem (
+        RedirectAttributes redirectAttributes,
+            @PathVariable Long newsId,
+            @RequestParam Long authorId) {
+        NewsItem n= newsItemRepository.getOne(newsId);
+        n.getAuthors().add(authorRepository.getOne(authorId));
+        newsItemRepository.save(n);
+        redirectAttributes.addFlashAttribute("message", "Kirjoittaja lisättiin.");
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        return "redirect:/newsitem/";
+               
+    }
+    
+    @DeleteMapping("/newsitem/{newsId}/category/{categoryId}")
+    public String removeCategoryFromNewsItem (
+            RedirectAttributes redirectAttributes,
+            @PathVariable Long newsId,
+            @PathVariable Long categoryId) {
+        
+        NewsItem n=newsItemRepository.getOne(newsId);
+        List<Category> c=n.getCategories();
+        for (int i=0;i<c.size();i++){
+            if(Objects.equals(c.get(i).getId(), categoryId)){
+                newsItemRepository.getOne(newsId).getCategories().remove(i);
+            }
+        }
+        newsItemRepository.save(n);
+        redirectAttributes.addFlashAttribute("message", "Kategorian poisto artikkelista onnistui!");
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        
+        return "redirect:/newsitem";
+    }
+    
+    @PostMapping("/newsitem/{newsId}/category")
+    public String addCategoryToNewsItem (
+        RedirectAttributes redirectAttributes,
+            @PathVariable Long newsId,
+            @RequestParam Long categoryId) {
+        NewsItem n= newsItemRepository.getOne(newsId);
+        n.getCategories().add(categoryRepository.getOne(categoryId));
+        newsItemRepository.save(n);
+        redirectAttributes.addFlashAttribute("message", "Kategoria lisättiin.");
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        return "redirect:/newsitem/";
+               
+    }
+
 
 }
