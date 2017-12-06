@@ -152,6 +152,7 @@ public class NewsItemController {
         return "redirect:/newsitem";
     }
 
+    @Transactional
     @PostMapping("/newsitem/{newsId}/category")
     public String addCategoryToNewsItem(
             RedirectAttributes redirectAttributes,

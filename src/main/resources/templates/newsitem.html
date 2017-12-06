@@ -51,7 +51,7 @@
         </form>
 
         <h1>Lista uutisista</h1>
-        <table class="table table-hover">
+        <table class="table table-hover table-bordered">
             <tr>
                 <th>Id</th>
                 <th>Otsikko</th>
@@ -99,7 +99,7 @@
                                             <div class="modal-body">
                                                 <p th:text="${'Lisää kirjoittaja uutiseen ' + newsItem.heading}"></p>
                                                 <form th:action="${'/newsitem/' + newsItem.id +'/author'}" th:method="POST">
-                                                    <p>Valitse kategoria listasta ja paina Lisää.</p>
+                                                    <p>Valitse kirjoittaja listasta ja paina Lisää.</p>
                                                     <p><select class="form-control" name="authorId" id="authorId">                                                            
                                                             <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}">Author</option>
                                                         </select>
@@ -115,10 +115,6 @@
 
                             </td>
                         </tr>
-
-
-
-
                     </table>
                 </td>
                 <td>
@@ -166,7 +162,32 @@
                         </tr>
                     </table>
                 </td>
-                <td>Julkaise</td>
+                <td>
+                    <span th:if="${newsItem.approved}">Hyväksytty</span>
+                    <span th:if="${!newsItem.approved}">Ei hyväksytty</span>
+                    <span th:if="${authorSignedIn != null}">
+                        <!--Approve =publish-->
+                        <form  th:if="${authorSignedIn.chiefEditor&&newsItem.approved==false}" th:action="${'/newsitem/' + newsItem.id + '/publish'}" th:method="POST">      
+                            <button class="btn btn-default btn-xs">Hyväksy</button>
+                        </form>
+
+                        <!--Revoke-->
+                        <form th:if="${authorSignedIn.chiefEditor&&newsItem.approved}" th:action="${'/newsitem/' + newsItem.id + '/publish'}" th:method="POST">      
+                            <button class="btn btn-default btn-xs">Julkaise</button>
+                        </form>
+                        
+                        <!--Delete-->
+                        <form th:if="${authorSignedIn.chiefEditor==true}" th:action="${'/newsitem/' + newsItem.id}" th:method="DELETE">      
+                            <button class="btn btn-default btn-xs">Poista uutinen</button>
+                        </form>
+                        
+                        
+                    </span>
+
+
+
+
+                </td>
 
 
             </tr>
