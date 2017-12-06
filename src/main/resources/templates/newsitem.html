@@ -167,13 +167,13 @@
                     <span th:if="${!newsItem.approved}">Ei hyväksytty</span>
                     <span th:if="${authorSignedIn != null}">
                         <!--Approve =publish-->
-                        <form  th:if="${authorSignedIn.chiefEditor&&newsItem.approved==false}" th:action="${'/newsitem/' + newsItem.id + '/publish'}" th:method="POST">      
+                        <form  th:if="${authorSignedIn.chiefEditor&&newsItem.approved==false}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
                             <button class="btn btn-default btn-xs">Hyväksy</button>
                         </form>
 
                         <!--Revoke-->
-                        <form th:if="${authorSignedIn.chiefEditor&&newsItem.approved}" th:action="${'/newsitem/' + newsItem.id + '/publish'}" th:method="POST">      
-                            <button class="btn btn-default btn-xs">Julkaise</button>
+                        <form th:if="${authorSignedIn.chiefEditor&&newsItem.approved}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
+                            <button class="btn btn-default btn-xs">Poista hyväksyntä</button>
                         </form>
                         
                         <!--Delete-->

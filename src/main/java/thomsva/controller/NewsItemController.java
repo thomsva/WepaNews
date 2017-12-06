@@ -112,7 +112,8 @@ public class NewsItemController {
 
         return "redirect:/newsitem";
     }
-
+    
+    @Transactional
     @PostMapping("/newsitem/{newsId}/author")
     public String addAuthorToNewsItem(
             RedirectAttributes redirectAttributes,
@@ -162,6 +163,35 @@ public class NewsItemController {
         n.getCategories().add(categoryRepository.getOne(categoryId));
         newsItemRepository.save(n);
         redirectAttributes.addFlashAttribute("message", "Kategoria lisättiin.");
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        return "redirect:/newsitem/";
+
+    }
+
+    @DeleteMapping("/newsitem/{id}")
+    public String removeNewsItem(
+            RedirectAttributes redirectAttributes,
+            @PathVariable Long id) {
+        newsItemRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "Uutinen poistettiin.");
+        redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
+        return "redirect:/newsitem/";
+
+    }
+
+    @PostMapping("/newsitem/{id}/approve")
+    public String toggleNewsItemApproval(
+            RedirectAttributes redirectAttributes,
+            @PathVariable Long id) {
+        NewsItem n = newsItemRepository.getOne(id);
+        n.setApproved(!n.isApproved());
+        newsItemRepository.save(n);
+        if (n.isApproved()) {
+            n.setApprovedBy(authenticationService.authorSignedIn());
+            redirectAttributes.addFlashAttribute("message", "Uutinen hyväksyttiin ja on nyt julkaistu.");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Uutisen hyväksyntä peruttiin.");
+        }
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "redirect:/newsitem/";
 
