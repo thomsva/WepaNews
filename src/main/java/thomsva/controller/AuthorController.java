@@ -56,7 +56,9 @@ public class AuthorController {
             model.addAttribute("error", "Salasanat eivät täsmää.");
         }
         if (valid) {
-            redirectAttributes.addFlashAttribute("message", "Käyttäjäksi rekisteröinti onnistui.");
+            redirectAttributes.addFlashAttribute("message",
+                    "Terveruloa uusi kirjoittaja " + author.getName()
+                            + ". Järjestelmä kirjasi sinut sisään.");
             authorRepository.save(author);
             authenticationService.login(author.getName(), author.getPassword());
             return "redirect:/author";

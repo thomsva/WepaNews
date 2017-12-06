@@ -11,11 +11,37 @@
         <div th:replace="page-template :: message"></div>
 
 
+        <h1>Kirjoittajat</h1>
+
+        <h2>Kirjoittajien lisääminen ja poistaminen</h2>
+        <p>
+            Kirjoittaja voi lisätä itsensä tietokantaan rekisteröidy-toiminnolla.  
+        </p>
+        <h2>Käyttöoikeudet kirjoittaja</h2>
+        <ul>
+            <li>Saa lisätä uutisia julkaistavaksi.</li>
+            <li>Saa muokata tai poistaa omia uutisia ennen niiden julkaisua.</li>
+        </ul>
+        <h2>Käyttöoikeudet päätoimittaja</h2>
+        <ul>
+            <li>Saa ylentää ja alentaa kirjoittajien oikeuksia (kirjoittaja/päätoimittaja)</li>
+            <li>Saa poistaa kirjoittajia. Tämä edellyttää, ettei kirjoittaja ole liitetty mihinkään uutiseen.</li>
+            <li>Saa hyväksyä uutisia julkaistavaksi.</li>
+            <li>Saa poistaa uutisia.</li>
+        </ul>
+        
         <h1>Nykyiset kirjoittajat</h1>
-        
-        
+
+
+
 
         <table class="table table-hover">
+            <tr>
+                <th>Nimi</th>
+                <th>Käyttöoikeus</th>
+                <th>Uutisia</th>
+                <th th:if="${authorSignedIn != null}">Hallinnointi</th>
+            </tr>
             <tr th:each="author : ${authors}">
                 <td th:text="${author.name}">author name</td>
                 <td>
@@ -25,17 +51,19 @@
                 <td th:text="${'Uutisia: ' + #lists.size(author.newsItems)}">newscount</td>
                 <td th:if="${authorSignedIn != null}">
                     <form th:if="${authorSignedIn.chiefEditor==true && author.chiefEditor==true}" th:action="${'/author/'+author.id+'/demote'}" th:method="POST">
-                        <input type="submit" value="Alenna" class="btn btn-xs"/>
+                        <input type="submit" value="Alenna kirjoittajaksi" class="btn btn-default btn-xs"/>
                     </form>
                     <form th:if="${authorSignedIn.chiefEditor ==true && author.chiefEditor != true}" th:action="${'/author/'+author.id+'/promote'}" th:method="POST">
-                        <input type="submit" value="Ylennä" class="btn btn-xs"/>
+                        <input type="submit" value="Ylennä päätoimittajaksi" class="btn btn-default btn-xs"/>
                     </form>
-                </td>
-                <td th:if="${authorSignedIn != null}">
+
                     <form th:if="${authorSignedIn.chiefEditor && author.newsItems.isEmpty()}" th:action="${'/author/'+ author.id}" th:method="DELETE">
-                        <input type="submit" value="Poista kirjoittaja" class="btn btn-xs"/>
+                        <input type="submit" value="Poista kirjoittaja" class="btn btn-default btn-xs"/>
                     </form>
+
                 </td>
+
+
 
             </tr>
         </table>

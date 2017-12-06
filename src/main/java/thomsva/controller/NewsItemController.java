@@ -81,84 +81,89 @@ public class NewsItemController {
         newsItem.setPicture(picture.getBytes());
         newsItem.setLede(lede);
         newsItem.setText(text);
-        Author a=authenticationService.authorSignedIn();
-        if (a!=null) newsItem.getAuthors().add(a);
+        Author a = authenticationService.authorSignedIn();
+        if (a != null) {
+            newsItem.getAuthors().add(a);
+        }
         newsItem.setApproved(false);
         newsItem.setDateTime(LocalDateTime.now());
-        
 
         newsItemRepository.save(newsItem);
         return "redirect:/newsitem";
 
     }
-    
+
     @DeleteMapping("/newsitem/{newsId}/author/{authorId}")
-    public String removeAuthorFromNewsItem (
+    public String removeAuthorFromNewsItem(
             RedirectAttributes redirectAttributes,
             @PathVariable Long newsId,
             @PathVariable Long authorId) {
-        
-        NewsItem n=newsItemRepository.getOne(newsId);
-        List<Author> a=n.getAuthors();
-        for (int i=0;i<a.size();i++){
-            if(Objects.equals(a.get(i).getId(), authorId)){
+
+        NewsItem n = newsItemRepository.getOne(newsId);
+        List<Author> a = n.getAuthors();
+        for (int i = 0; i < a.size(); i++) {
+            if (Objects.equals(a.get(i).getId(), authorId)) {
                 newsItemRepository.getOne(newsId).getAuthors().remove(i);
             }
         }
         newsItemRepository.save(n);
         redirectAttributes.addFlashAttribute("message", "Kirjoittajan poisto artikkelista onnistui!");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
-        
+
         return "redirect:/newsitem";
     }
-    
+
     @PostMapping("/newsitem/{newsId}/author")
-    public String addAuthorToNewsItem (
-        RedirectAttributes redirectAttributes,
+    public String addAuthorToNewsItem(
+            RedirectAttributes redirectAttributes,
             @PathVariable Long newsId,
             @RequestParam Long authorId) {
-        NewsItem n= newsItemRepository.getOne(newsId);
+        NewsItem n = newsItemRepository.getOne(newsId);
         n.getAuthors().add(authorRepository.getOne(authorId));
         newsItemRepository.save(n);
         redirectAttributes.addFlashAttribute("message", "Kirjoittaja lisättiin.");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "redirect:/newsitem/";
-               
+
     }
-    
+
     @DeleteMapping("/newsitem/{newsId}/category/{categoryId}")
-    public String removeCategoryFromNewsItem (
+    public String removeCategoryFromNewsItem(
             RedirectAttributes redirectAttributes,
             @PathVariable Long newsId,
             @PathVariable Long categoryId) {
-        
-        NewsItem n=newsItemRepository.getOne(newsId);
-        List<Category> c=n.getCategories();
-        for (int i=0;i<c.size();i++){
-            if(Objects.equals(c.get(i).getId(), categoryId)){
-                newsItemRepository.getOne(newsId).getCategories().remove(i);
+
+        NewsItem n = newsItemRepository.getOne(newsId);
+        List<Category> c = n.getCategories();
+        if (c.size() == 1) {
+            redirectAttributes.addFlashAttribute("error", "Ainutta kirjoittajaa ei voi poistaa.");
+        } else {
+            for (int i = 0; i < c.size(); i++) {
+                if (Objects.equals(c.get(i).getId(), categoryId)) {
+                    newsItemRepository.getOne(newsId).getCategories().remove(i);
+                    break;
+                }
             }
+            newsItemRepository.save(n);
+            redirectAttributes.addFlashAttribute("message", "Kategorian poisto artikkelista onnistui!");
         }
-        newsItemRepository.save(n);
-        redirectAttributes.addFlashAttribute("message", "Kategorian poisto artikkelista onnistui!");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
-        
+
         return "redirect:/newsitem";
     }
-    
+
     @PostMapping("/newsitem/{newsId}/category")
-    public String addCategoryToNewsItem (
-        RedirectAttributes redirectAttributes,
+    public String addCategoryToNewsItem(
+            RedirectAttributes redirectAttributes,
             @PathVariable Long newsId,
             @RequestParam Long categoryId) {
-        NewsItem n= newsItemRepository.getOne(newsId);
+        NewsItem n = newsItemRepository.getOne(newsId);
         n.getCategories().add(categoryRepository.getOne(categoryId));
         newsItemRepository.save(n);
         redirectAttributes.addFlashAttribute("message", "Kategoria lisättiin.");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "redirect:/newsitem/";
-               
-    }
 
+    }
 
 }

@@ -52,10 +52,19 @@
 
         <h1>Lista uutisista</h1>
         <table class="table table-hover">
+            <tr>
+                <th>Id</th>
+                <th>Otsikko</th>
+                <th>Ingressi</th>
+                <th>Kuva</th>
+                <th>Kirjoittajat</th>
+                <th>Kategoriat</th>
+                <th colspan="2">Hallinnointi</th>
+            </tr>
             <tr th:each="newsItem : ${newsItems}">
-                <td th:text="${newsItem.heading}">Heading</td>
-                <td th:text="${newsItem.lede}">lede</td>
                 <td th:text="${newsItem.id}">id</td>
+                <td th:text="${newsItem.heading}">Heading</td>
+                <td th:text="${newsItem.lede}">lede</td>        
                 <td>
                     <div style="height: 100px;">
                         <div class="mh-100" style="width: 100px; height: 200px;">
@@ -64,52 +73,101 @@
                     </div>
                 </td>
                 <td>
-                    <span th:each="author : ${newsItem.authors}">
-                        <form th:action="${'/newsitem/' + newsItem.id + '/author/'+ author.id}" th:method="DELETE">
-                            <button  class="btn btn-default">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                <span th:text="${author.name}" ></span>
-                            </button>
+                    <table>
+                        <tr th:each="author : ${newsItem.authors}">
+                            <form th:action="${'/newsitem/' + newsItem.id + '/author/'+ author.id}" th:method="DELETE">
+                                <td th:text="${author.name+'&nbsp;'}"></td>
+                                <td><button class="btn btn-default btn-xs glyphicon glyphicon-remove"></button></td>
+                            </form>
+                        </tr>
+                        <tr>
+                            <td>Lisää...</td>
+                            <td>
 
-                        </form>
-                    </span>
+                                <!-- Trigger the modal with a button -->
+                                <button class="btn btn-default btn-xs glyphicon glyphicon-plus" data-toggle="modal" th:data-target="${'#ModalAuthor'+newsItem.id}"></button>
+                                <!-- Modal -->
+                                <div class="modal fade" th:id="${'ModalAuthor'+newsItem.id}" role="dialog">
+                                    <div class="modal-dialog">
 
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Lisää kirjoittaja</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p th:text="${'Lisää kirjoittaja uutiseen ' + newsItem.heading}"></p>
+                                                <form th:action="${'/newsitem/' + newsItem.id +'/author'}" th:method="POST">
+                                                    <p>Valitse kategoria listasta ja paina Lisää.</p>
+                                                    <p><select class="form-control" name="authorId" id="authorId">                                                            
+                                                            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}">Author</option>
+                                                        </select>
+                                                    </p>
+                                                    <p>
+                                                        <input type="submit" value="Lisää" class="btn"/>
+                                                    </p>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+
+
+
+
+                    </table>
                 </td>
                 <td>
-                    <span th:each="category : ${newsItem.categories}">
-                        <form th:action="${'/newsitem/' + newsItem.id + '/category/'+ category.id}" th:method="DELETE">
-                            <button  class="btn btn-default">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                <span th:text="${category.name}" ></span>
-                            </button>
-                        </form>
-                    </span>
+                    <table>
+                        <tr th:each="category : ${newsItem.categories}">
+                            <form th:action="${'/newsitem/' + newsItem.id + '/category/'+ category.id}" th:method="DELETE">
+                                <td th:text="${category.name}+'&nbsp;'" ></td>
+                                <td><button class="btn btn-default btn-xs glyphicon glyphicon-remove"></button></td>
+                            </form>
+                        </tr>
+                        <tr>
+                            <td>Lisää...</td>
+                            <td>
 
+                                <!-- Trigger the modal with a button -->
+                                <button class="btn btn-default btn-xs glyphicon glyphicon-plus" data-toggle="modal" th:data-target="${'#ModalCategory'+newsItem.id}"></button>
+                                <!-- Modal -->
+                                <div class="modal fade" th:id="${'ModalCategory'+newsItem.id}" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Lisää kategoria</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p th:text="${'Lisää kategoria uutiseen ' + newsItem.heading}"></p>
+                                                <form th:action="${'/newsitem/' + newsItem.id +'/category'}" th:method="POST">
+                                                    <p>Valitse kategoria listasta ja paina Lisää.</p>
+                                                    <p><select class="form-control" name="categoryId" id="categoryId">
+                                                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category</option>
+                                                        </select>
+                                                    </p>
+                                                    <p>
+                                                        <input type="submit" value="Lisää" class="btn"/>
+                                                    </p>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-                <td>
-                    <form th:action="${'/newsitem/' + newsItem.id +'/author'}" th:method="POST">
-                        <select class="form-control" name="authorId" id="authorId">
-                            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}">Author</option>
-                        </select>
-                        <button  class="btn btn-default">
-                                <span class="glyphicon glyphicon-add"></span>
-                                Lisää kirjoittaja
-                            </button>
-                    </form>
-                </td> 
-                
-                
-                <td>
-                    <form th:action="${'/newsitem/' + newsItem.id +'/category'}" th:method="POST">
-                        <select class="form-control" name="categoryId" id="categoryId">
-                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category</option>
-                        </select>
-                        <button  class="btn btn-default">
-                                <span class="glyphicon glyphicon-add"></span>
-                                Lisää kategoria
-                            </button>
-                    </form>
-                </td> 
+                <td>Julkaise</td>
+
 
             </tr>
 
