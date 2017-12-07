@@ -97,7 +97,7 @@
                                                 <h4 class="modal-title">Lisää kirjoittaja</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <p th:text="${'Lisää kirjoittaja uutiseen ' + newsItem.heading}"></p>
+                                                <p th:text="${'Lisää kirjoittaja uutiseen: ' + newsItem.heading}"></p>
                                                 <form th:action="${'/newsitem/' + newsItem.id +'/author'}" th:method="POST">
                                                     <p>Valitse kirjoittaja listasta ja paina Lisää.</p>
                                                     <p><select class="form-control" name="authorId" id="authorId">                                                            
@@ -142,7 +142,7 @@
                                                 <h4 class="modal-title">Lisää kategoria</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <p th:text="${'Lisää kategoria uutiseen ' + newsItem.heading}"></p>
+                                                <p th:text="${'Lisää kategoria uutiseen: ' + newsItem.heading}"></p>
                                                 <form th:action="${'/newsitem/' + newsItem.id +'/category'}" th:method="POST">
                                                     <p>Valitse kategoria listasta ja paina Lisää.</p>
                                                     <p><select class="form-control" name="categoryId" id="categoryId">
@@ -168,17 +168,17 @@
                     <span th:if="${authorSignedIn != null}">
                         <!--Approve =publish-->
                         <form  th:if="${authorSignedIn.chiefEditor&&newsItem.approved==false}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
-                            <button class="btn btn-default btn-xs">Hyväksy</button>
+                            <button class="btn btn-default btn-xs btn-block">Hyväksy</button>
                         </form>
 
                         <!--Revoke-->
                         <form th:if="${authorSignedIn.chiefEditor&&newsItem.approved}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
-                            <button class="btn btn-default btn-xs">Poista hyväksyntä</button>
+                            <button class="btn btn-default btn-xs btn-block">Poista hyväksyntä</button>
                         </form>
                         
                         <!--Delete-->
                         <form th:if="${authorSignedIn.chiefEditor==true}" th:action="${'/newsitem/' + newsItem.id}" th:method="DELETE">      
-                            <button class="btn btn-default btn-xs">Poista uutinen</button>
+                            <button class="btn btn-default btn-xs btn-block">Poista uutinen</button>
                         </form>
                         
                         

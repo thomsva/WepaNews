@@ -37,6 +37,8 @@ public class NewsItem extends AbstractPersistable<Long>{
     @ManyToOne
     private Author approvedBy;
     
+    private Long hits;
+    
     public NewsItem(){
         this.categories = new ArrayList<>();
         this.authors = new ArrayList<>();

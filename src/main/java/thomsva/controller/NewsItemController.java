@@ -93,6 +93,7 @@ public class NewsItemController {
 
     }
 
+    @Transactional
     @DeleteMapping("/newsitem/{newsId}/author/{authorId}")
     public String removeAuthorFromNewsItem(
             RedirectAttributes redirectAttributes,
@@ -127,7 +128,8 @@ public class NewsItemController {
         return "redirect:/newsitem/";
 
     }
-
+    
+    @Transactional
     @DeleteMapping("/newsitem/{newsId}/category/{categoryId}")
     public String removeCategoryFromNewsItem(
             RedirectAttributes redirectAttributes,
