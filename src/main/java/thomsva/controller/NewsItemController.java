@@ -248,6 +248,7 @@ public class NewsItemController {
 
     }
 
+    @Transactional
     @PostMapping("/newsitem/{id}/approve")
     public String toggleNewsItemApproval(
             RedirectAttributes redirectAttributes,
