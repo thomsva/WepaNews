@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Objects;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import thomsva.repository.AuthorRepository;
@@ -41,8 +45,34 @@ public class NewsItemController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    //Front page
     @GetMapping("/")
     public String showFrontpage(Model model) {
+        Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
+        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+
+        model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
+        model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        return "index";
+    }
+
+    //Show newsitem
+    @GetMapping("/{id}")
+    public String showNewsItem(Model model, @PathVariable Long id) {
+        Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
+        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        NewsItem selectedNewsItem=newsItemRepository.getOne(id);
+        selectedNewsItem.incrementHits();
+        newsItemRepository.save(selectedNewsItem);
+        
+
+        model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
+        model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("selectedNewsItem", selectedNewsItem);
         return "index";
     }
 
@@ -113,7 +143,7 @@ public class NewsItemController {
 
         return "redirect:/newsitem";
     }
-    
+
     @Transactional
     @PostMapping("/newsitem/{newsId}/author")
     public String addAuthorToNewsItem(
@@ -128,7 +158,7 @@ public class NewsItemController {
         return "redirect:/newsitem/";
 
     }
-    
+
     @Transactional
     @DeleteMapping("/newsitem/{newsId}/category/{categoryId}")
     public String removeCategoryFromNewsItem(

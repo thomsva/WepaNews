@@ -12,20 +12,71 @@
         <div th:replace="page-template :: message"></div>
 
 
-        <div class="jumbotron">
-            <h1>Front page news</h1>      
-            <p>Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, mobile-first projects on the web.</p>
+
+
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="jumbotron" th:if="${selectedNewsItem == null}">
+                    <h1>Viimeisimmät uutiset</h1>      
+                    <table class="table table-bordered">
+                        <tr>
+                            <td th:each="newsItem : ${newsItemsNewTop5}">
+                                <h2 th:text="${newsItem.heading}"></h2>
+                                <span th:text="${newsItem.lede}"></span>
+                                <div style="height: 100px;">
+                                    <div class="mh-100" style="width: 100px; height: 200px;">
+                                        <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+                <div th:if="${selectedNewsItem != null}">
+                    <h1 th:text="${selectedNewsItem.heading}"></h1>
+                    <div style="height: 300px;">
+                        <div class="mh-100" style="width: 300px; height: 300px;">
+                            <img th:src="${'/newsitem/'+ selectedNewsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                        </div>
+                    </div>
+                    <p th:text="${selectedNewsItem.lede}"></p>
+                    <p th:text="${selectedNewsItem.text}"></p>
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+            <div class="col-sm-3">
+                <h3>Uusimmat</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="newsItem : ${newsItemsNewTop25}">
+                        <a th:href="${'/'+newsItem.id}" th:text="${newsItem.heading}"></a>
+                        <span th:href="${'/'+newsItem.id}" th:text="${#temporals.format(newsItem.dateTime,'dd.MM.yyyy HH:mm')}"></span>
+                    </li>
+                </ul>
+
+                <h3>Luetuimmat</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="newsItem : ${newsItemsHitsTop25}">
+                        <a th:href="${'/'+newsItem.id}" th:text="${newsItem.heading}"></a>
+                        <span th:text="${#temporals.format(newsItem.dateTime,'dd.MM.yyyy HH:mm')}"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            
         </div>
 
-        <p>Jee jee</p>
 
-        <table class="table">
-            <tr>
-                <td>Nimi</td>
-                <td>sdds</td>
-            </tr>
 
-        </table>
 
     </body>
 </html>
