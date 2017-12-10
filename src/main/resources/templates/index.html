@@ -15,7 +15,7 @@
 
                 <!-- latest news stories -->
                 <div class="jumbotron" th:if="${selectedNewsItem == null && newsItemList == null}">
-                    <h1>Viimeisimmät uutiset</h1>      
+                    <h3>Viimeisimmät uutiset</h3>      
                     <table class="table table-bordered">
                         <tr>
                             <td th:each="newsItem : ${newsItemsNewTop5}">
@@ -65,7 +65,7 @@
 
                 <!--List-->
                 <div th:if="${newsItemList != null}">
-                    <h1 th:text="${listHeading}"></h1>
+                    <h3 th:text="${listHeading}"></h3>
                     <table class="table">
                         <tr th:each="newsItem : ${newsItemList}">
                             <td><a th:href="${'/'+newsItem.id}" th:text="${newsItem.heading}"></a></td>
