@@ -65,6 +65,7 @@ public class NewsItemController {
     }
 
     //Show newsitem and save a pageview in "Hits"
+    @Transactional
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
@@ -74,15 +75,18 @@ public class NewsItemController {
         hit.setNewsItem(selectedNewsItem);
         hit.setDateTime(LocalDateTime.now());
         hitRepository.save(hit);
+        
         newsItemRepository.save(selectedNewsItem);
-        model.addAttribute("hitt",hitRepository.count());
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("hits1minute",hitRepository.findByDateTimeAfter(LocalDateTime.now().minusMinutes(1)));
+        model.addAttribute("hits1minutethis",hitRepository.findByNewsItemAndDateTimeAfter(selectedNewsItem, LocalDateTime.now().minusMinutes(1)));
         return "index";
     }
 
+    @Transactional
     @GetMapping("/listbycategory/{id}")
     public String listByCategory(Model model, @PathVariable Long id) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
@@ -96,6 +100,7 @@ public class NewsItemController {
         return "index";
     }
 
+    @Transactional
     @GetMapping("/listnewest")
     public String listNewest(Model model) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
@@ -109,6 +114,7 @@ public class NewsItemController {
         return "index";
     }
 
+    @Transactional
     @GetMapping("/listbyweeklyhits")
     public String listByWeeklyHits(Model model) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
@@ -122,6 +128,7 @@ public class NewsItemController {
         return "index";
     }
 
+    @Transactional
     @GetMapping("/newsitem")
     public String showNewsItems(Model model) {
         if (authenticationService.authorSignedIn() != null) {

@@ -15,8 +15,6 @@ public interface NewsItemRepository extends JpaRepository<NewsItem, Long> {
     
     List<NewsItem> findByApproved(Boolean approved, Pageable pageable);
     
-
     
-    List<NewsItem> findByHits(Long hits);
     
 }
