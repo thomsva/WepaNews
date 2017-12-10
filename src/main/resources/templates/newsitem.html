@@ -51,7 +51,7 @@
         </form>
 
         <h1>Lista uutisista</h1>
-        <table class="table table-hover table-bordered">
+        <table class="table table-bordered">
             <tr>
                 <th>Id</th>
                 <th>Otsikko</th>
@@ -61,7 +61,7 @@
                 <th>Kategoriat</th>
                 <th colspan="2">Hallinnointi</th>
             </tr>
-            <tr th:each="newsItem : ${newsItems}">
+            <tr th:each="newsItem : ${newsItems}" th:classappend="${newsItem.approved} ? alert-success : alert-danger">
                 <td th:text="${newsItem.id}">id</td>
                 <td th:text="${newsItem.heading}">Heading</td>
                 <td th:text="${newsItem.lede}">lede</td>        

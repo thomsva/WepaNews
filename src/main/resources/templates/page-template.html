@@ -9,11 +9,12 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
     </head>
 
     <body>
-        <!--Menu fragment -->
-        <nav class="navbar navbar-inverse"  th:fragment="topmenu" >
+        <!--Control panel menu fragment -->
+        <nav class="navbar navbar-default"  th:fragment="topmenu" >
             <div class="container-fluid">
 
                 <!-- Service name -->
@@ -41,6 +42,64 @@
                             <span class="glyphicon glyphicon-log-in"></span> Kirjaudu sisään
                         </a>
                     </li>
+
+
+                    <li class="dropdown" th:if="${authorSignedIn != null}">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><span th:text="${authorSignedIn.name}"></span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="${'/author/' +authorSignedIn.id + '/password'}">
+                                    <span class="glyphicon glyphicon-edit"></span> Vaihda salasana</a>
+                            </li>
+                            <li>
+                                <a href="/author/logout" >
+                                    <span class="glyphicon glyphicon-log-out"></span> Kirjaudu ulos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/newsitem/">
+                                    <span class="glyphicon glyphicon-folder-open"></span> Omat kirjoitukset
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+        
+        <!--News menu fragment -->
+        <nav class="navbar navbar-inverse"  th:fragment="newsmenu" >
+            <div class="container-fluid">
+
+                <!-- Service name -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">WepaNews</a>
+                </div>
+
+
+                <!-- Left aligned part of menu -->
+                <ul class="nav navbar-nav">              
+                    <li><a href="/listnewest"><span class="glyphicon glyphicon-star"></span> Uusimmat</a></li>
+                    <li><a href="/listbyweeklyhits"><span class="glyphicon glyphicon-heart"></span> Viikon luetuimmat</a></li>
+               
+                    <li class="dropdown" th:if="${categories != null}">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon glyphicon-tags"></span><span> Kategoriat</span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li th:each="category: ${categories}"><a th:href="${'/listbycategory/' +category.id}" th:text="${category.name}">Kategorian nimi</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+                <!-- Right aligned part of menu -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li th:if="${authorSignedIn == null}">
+                        <a href="/newsitem">
+                            <span class="glyphicon glyphicon-cog"></span> Hallintapaneeli
+                        </a>
+                    </li>
+                    
+                    
 
 
                     <li class="dropdown" th:if="${authorSignedIn != null}">

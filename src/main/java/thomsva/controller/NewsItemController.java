@@ -55,24 +55,61 @@ public class NewsItemController {
         model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("categories", categoryRepository.findAll());
         return "index";
     }
 
     //Show newsitem
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
-        Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
         Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
-        NewsItem selectedNewsItem=newsItemRepository.getOne(id);
+        NewsItem selectedNewsItem = newsItemRepository.getOne(id);
         selectedNewsItem.incrementHits();
         newsItemRepository.save(selectedNewsItem);
-        
-
-        model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "index";
+    }
+
+    @GetMapping("/listbycategory/{id}")
+    public String listByCategory(Model model, @PathVariable Long id) {
+        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("newsItemList", categoryRepository.getOne(id).getNewsItems());
+        model.addAttribute("listHeading", "Uutisia kategorialla '" + categoryRepository.getOne(id).getName() + "'");
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "index";
+    }
+
+    @GetMapping("/listnewest")
+    public String listNewest(Model model) {
+        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("newsItemList", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("listHeading", "Uusimmat uutiset");
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "index";
+    }
+
+    @GetMapping("/listbyweeklyhits")
+    public String listByWeeklyHits(Model model) {
+        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("newsItemList", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("listHeading", "Suosituimmat uutiset");
+        model.addAttribute("categories", categoryRepository.findAll());
         return "index";
     }
 

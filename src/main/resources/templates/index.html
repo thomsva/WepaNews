@@ -2,21 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head th:replace="page-template :: head">
         <title>WepaNews</title>
+
     </head>
 
-
-
     <body class="container">
-        <nav th:replace="page-template :: topmenu"></nav>
+        <nav th:replace="page-template :: newsmenu"></nav>
         <div th:replace="page-template :: error"></div>
         <div th:replace="page-template :: message"></div>
 
-
-
-
         <div class="row">
             <div class="col-sm-9">
-                <div class="jumbotron" th:if="${selectedNewsItem == null}">
+
+                <!-- latest news stories -->
+                <div class="jumbotron" th:if="${selectedNewsItem == null && newsItemList == null}">
                     <h1>Viimeisimmät uutiset</h1>      
                     <table class="table table-bordered">
                         <tr>
@@ -25,7 +23,9 @@
                                 <span th:text="${newsItem.lede}"></span>
                                 <div style="height: 100px;">
                                     <div class="mh-100" style="width: 100px; height: 200px;">
-                                        <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                                        <a th:href="${'/'+newsItem.id}">
+                                            <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                                        </a>
                                     </div>
                                 </div>
                             </td>
@@ -34,16 +34,45 @@
                     </table>
 
                 </div>
+
+
+                <!--Selected news item -->
                 <div th:if="${selectedNewsItem != null}">
                     <h1 th:text="${selectedNewsItem.heading}"></h1>
-                    <div style="height: 300px;">
+                    <div>
                         <div class="mh-100" style="width: 300px; height: 300px;">
                             <img th:src="${'/newsitem/'+ selectedNewsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
                         </div>
                     </div>
-                    <p th:text="${selectedNewsItem.lede}"></p>
+                    <p><mark class="lead" th:text="${selectedNewsItem.lede}"></mark></p>
                     <p th:text="${selectedNewsItem.text}"></p>
+                    <p class="small" th:if="${selectedNewsItem.authors != null}">
+                        Kirjoittanut: 
+                        <span th:each="author : ${selectedNewsItem.authors}" >
+                            <span th:text="${author.name}"></span>
+                            <span th:text="${#temporals.format(selectedNewsItem.dateTime,'dd.MM.yyyy HH:mm')}"></span>
+                        </span>
+                    </p>
+                    <p class="small" th:if="${selectedNewsItem.categories != null}">
+                        Kategoriat:  
+                        <span th:each="category : ${selectedNewsItem.categories}" >
+                            <a th:href="${'/listbycategory/'+category.id}" th:text="${category.name}"></a>
+                        </span>
+                    </p>
+                    <p class="small"><span th:text="${'Luettu '+selectedNewsItem.hits+' kertaa'}"></span></p>
 
+                </div>
+
+                <!--List-->
+                <div th:if="${newsItemList != null}">
+                    <h1 th:text="${listHeading}"></h1>
+                    <table class="table">
+                        <tr th:each="newsItem : ${newsItemList}">
+                            <td><a th:href="${'/'+newsItem.id}" th:text="${newsItem.heading}"></a></td>
+
+                            <td th:text="${#temporals.format(newsItem.dateTime,'dd.MM.yyyy HH:mm')}"></td>
+                        </tr>
+                    </table>
 
                 </div>
 
@@ -71,8 +100,8 @@
                     </li>
                 </ul>
             </div>
-            
-            
+
+
         </div>
 
 
