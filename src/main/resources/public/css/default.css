@@ -1,20 +1,16 @@
 body {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400; 
+    font-family: 'Arvo', serif;
+    font-weight: 400; 
 }
 strong,
 .text-strong {
-  font-weight: 700;
+    font-weight: 700;
 }
 .text-light {
-  font-weight: 300; 
+    font-weight: 300; 
 }
-h1, h2{
-  font-family: 'Glegoo', sans-serif;
-  font-weight: 700;
-}
- h3, h4, h5, h6,
+h1, h2,h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6{
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
+    font-family: 'Arvo', serif;
+    font-weight: 700;
 }

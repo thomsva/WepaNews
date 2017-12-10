@@ -59,7 +59,8 @@
                             <a th:href="${'/listbycategory/'+category.id}" th:text="${category.name}"></a>
                         </span>
                     </p>
-                    <p class="small"><span th:text="${'Luettu '+selectedNewsItem.hits+' kertaa'}"></span></p>
+                    <p class="small"><span th:text="${'Luettu '+ #lists.size(selectedNewsItem.Hits) + ' kertaa'}"></span></p>
+                    <p><span th:text="${hitt}"></span></p>
 
                 </div>
 

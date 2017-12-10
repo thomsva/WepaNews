@@ -27,8 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import thomsva.domain.Author;
 import thomsva.domain.Category;
+import thomsva.domain.Hit;
 import thomsva.domain.NewsItem;
 import thomsva.repository.CategoryRepository;
+import thomsva.repository.HitRepository;
 
 @Controller
 public class NewsItemController {
@@ -44,6 +46,9 @@ public class NewsItemController {
 
     @Autowired
     private AuthenticationService authenticationService;
+    
+    @Autowired
+    private HitRepository hitRepository;
 
     //Front page
     @GetMapping("/")
@@ -59,14 +64,18 @@ public class NewsItemController {
         return "index";
     }
 
-    //Show newsitem
+    //Show newsitem and save a pageview in "Hits"
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
         Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
         NewsItem selectedNewsItem = newsItemRepository.getOne(id);
-        selectedNewsItem.incrementHits();
+        Hit hit=new Hit();
+        hit.setNewsItem(selectedNewsItem);
+        hit.setDateTime(LocalDateTime.now());
+        hitRepository.save(hit);
         newsItemRepository.save(selectedNewsItem);
+        model.addAttribute("hitt",hitRepository.count());
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
@@ -116,9 +125,6 @@ public class NewsItemController {
     @GetMapping("/newsitem")
     public String showNewsItems(Model model) {
         if (authenticationService.authorSignedIn() != null) {
-            ArrayList<Long> selectedAuthors = new ArrayList<>();
-            selectedAuthors.add(authenticationService.authorSignedIn().getId());
-            selectedAuthors.add(3L);
             model.addAttribute("newsItems", newsItemRepository.findAll());
             model.addAttribute("authors", authorRepository.findAll());
             model.addAttribute("categories", categoryRepository.findAll());

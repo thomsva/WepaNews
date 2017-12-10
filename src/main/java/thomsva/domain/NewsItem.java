@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -38,10 +39,9 @@ public class NewsItem extends AbstractPersistable<Long>{
     @ManyToOne
     private Author approvedBy;
     
-    private Long hits=0L;
+    @OneToMany(mappedBy="newsItem")
+    private List<Hit> hits=new ArrayList<>();
     
-    public void incrementHits(){
-        this.hits++;
-    }
+
 
 }
