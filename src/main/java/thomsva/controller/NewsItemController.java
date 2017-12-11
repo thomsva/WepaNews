@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,29 +61,30 @@ public class NewsItemController {
     @GetMapping("/")
     public String showFrontpage(Model model) {
         Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
-        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
+        Pageable pageableNewTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "popular");
         calculatePopular();
         model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
-        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("categories", categoryRepository.findAll());
         return "index";
     }
 
-    //Front page: Show NewsItem and save a pageview in "Hits"
+    //Front page: Show NewsItem and increment "Hits"
     @Transactional
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
-        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
+        Pageable pageableNewTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "popular");
         NewsItem selectedNewsItem = newsItemRepository.getOne(id);
         Hit hit = new Hit();
         hit.setNewsItem(selectedNewsItem);
         hit.setDateTime(LocalDateTime.now());
         hitRepository.save(hit);
-        calculatePopular();        
+        calculatePopular();
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
-        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
         model.addAttribute("categories", categoryRepository.findAll());
 
@@ -95,9 +95,10 @@ public class NewsItemController {
     @Transactional
     @GetMapping("/listbycategory/{id}")
     public String listByCategory(Model model, @PathVariable Long id) {
-        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "popular");
         Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        calculatePopular();
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("newsItemList", categoryRepository.getOne(id).getNewsItems());
@@ -110,9 +111,10 @@ public class NewsItemController {
     @Transactional
     @GetMapping("/listnewest")
     public String listNewest(Model model) {
-        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "popular");
         Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        calculatePopular();
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
         model.addAttribute("newsItemList", newsItemRepository.findByApproved(true, pageableNewTop25));
@@ -125,12 +127,13 @@ public class NewsItemController {
     @Transactional
     @GetMapping("/listbyweeklyhits")
     public String listByWeeklyHits(Model model) {
-        Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableNewTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "dateTime");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 25, Sort.Direction.DESC, "popular");
         Pageable pageableNewsItemsList = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
+        calculatePopular();
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
-        model.addAttribute("newsItemList", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("newsItemList", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("listHeading", "Suosituimmat uutiset");
         model.addAttribute("categories", categoryRepository.findAll());
         return "index";

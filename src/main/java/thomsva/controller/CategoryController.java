@@ -4,7 +4,6 @@ package thomsva.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,20 +29,13 @@ public class CategoryController {
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "category";
-    
     }
     
     @PostMapping("/category")
     public String addCategory(
             RedirectAttributes redirectAttributes,
-
-            @ModelAttribute Category category,
-            BindingResult errors
-            ){
-        //Category c=new Category();
-        //c.setName(category.getName());
+            @ModelAttribute Category category){
         categoryRepository.save(category);
-        
         redirectAttributes.addFlashAttribute("message", "Tallennettiin "+category.getId()+".");
         return "redirect:/category";
     }
@@ -54,7 +46,6 @@ public class CategoryController {
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "category";
-    
     }
     
     @DeleteMapping("/category/{id}")

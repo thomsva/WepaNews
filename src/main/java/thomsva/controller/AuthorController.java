@@ -61,6 +61,7 @@ public class AuthorController {
                             + ". Järjestelmä kirjasi sinut sisään.");
             authorRepository.save(author);
             authenticationService.login(author.getName(), author.getPassword());
+            
             return "redirect:/author";
         } else {
             return "signup";
