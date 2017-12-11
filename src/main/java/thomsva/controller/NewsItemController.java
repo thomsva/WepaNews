@@ -58,6 +58,7 @@ public class NewsItemController {
     }
 
     //Front page
+    @Transactional
     @GetMapping("/")
     public String showFrontpage(Model model) {
         Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
