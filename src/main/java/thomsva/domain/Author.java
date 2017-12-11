@@ -2,6 +2,7 @@ package thomsva.domain;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ public class Author extends AbstractPersistable<Long> {
 
     private String name;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", fetch=FetchType.EAGER)
     private List<NewsItem> newsItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "approvedBy")

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 
@@ -21,7 +22,7 @@ public class Category extends AbstractPersistable<Long> {
 
     private String name;
 
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "categories", fetch=FetchType.EAGER)
     private List<NewsItem> newsItems = new ArrayList<>();
 
 }

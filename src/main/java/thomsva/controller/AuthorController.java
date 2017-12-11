@@ -26,6 +26,7 @@ public class AuthorController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    //Authors page
     @GetMapping("/author")
     public String getAuthors(Model model) {
         model.addAttribute("authors", authorRepository.findAll());
@@ -33,11 +34,13 @@ public class AuthorController {
         return "authors";
     }
 
+    //Signup form
     @GetMapping("/author/signup")
     public String showSignup(Model model) {
         return "signup";
     }
 
+    //Process signup
     @PostMapping("/author/signup")
     public String addAuthor(
             RedirectAttributes redirectAttributes,
@@ -68,11 +71,13 @@ public class AuthorController {
         }
     }
 
+    //Login form
     @GetMapping("/author/login")
     public String showLogin(Model model) {
         return "login";
     }
 
+    //Process login
     @PostMapping("/author/login")
     public String loginAuthor(
             RedirectAttributes redirectAttributes,
@@ -87,13 +92,15 @@ public class AuthorController {
         }
     }
 
+    //Logout
     @GetMapping("/author/logout")
     public String logoutAuthor(Model model) {
         authenticationService.logout();
         model.addAttribute("message", "Olet kirjautunut ulos.");
         return "login";
     }
-
+    
+    //Delete Author
     @DeleteMapping("/author/{id}")
     public String removeAuthor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Author author = authorRepository.getOne(id);
@@ -117,6 +124,7 @@ public class AuthorController {
         return "redirect:/author";
     }
 
+    //Show form to change password
     @GetMapping("/author/{id}/password")
     public String showPasswordForm(Model model, @PathVariable Long id) {
         Author author = authorRepository.getOne(id);
@@ -129,6 +137,7 @@ public class AuthorController {
         }
     }
 
+    //Process password change
     @PostMapping("/author/{id}/password")
     public String updatePassword(
             RedirectAttributes redirectAttributes,
@@ -152,6 +161,8 @@ public class AuthorController {
         return "redirect:/author";
     }
 
+    
+    //Promote author
     @PostMapping("/author/{id}/promote")
     public String promoteAuthor(
             RedirectAttributes redirectAttributes,
@@ -167,6 +178,7 @@ public class AuthorController {
         return "redirect:/author";
     }
 
+    //Demote author
     @PostMapping("/author/{id}/demote")
     public String demoteAuthor(
             RedirectAttributes redirectAttributes,
