@@ -177,6 +177,10 @@ public class NewsItemController {
         newsItem.setPicture(picture.getBytes());
         newsItem.setLede(lede);
         newsItem.setText(text);
+        if (!newsItem.validate()) {
+            redirectAttributes.addFlashAttribute("error", newsItem.validateMessage());
+            return "redirect:/newsitem";
+        }
         Author a = authenticationService.authorSignedIn();
         if (a != null) {
             newsItem.getAuthors().add(a);
@@ -206,6 +210,10 @@ public class NewsItemController {
         }
         newsItem.setLede(lede);
         newsItem.setText(text);
+        if (!newsItem.validate()) {
+            redirectAttributes.addFlashAttribute("error", newsItem.validateMessage());
+            return "redirect:/newsitem";
+        }
         Author a = authenticationService.authorSignedIn();
         newsItem.setApproved(false);
         newsItemRepository.save(newsItem);

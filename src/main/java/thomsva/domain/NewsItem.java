@@ -53,5 +53,42 @@ public class NewsItem extends AbstractPersistable<Long> {
         }
         this.popular = okHits;
     }
+    
+    //Returns false if NewsItem is not valid
+    public boolean validate(){
+        boolean valid=true;
+        if(this.heading.length()>50){
+            //Heading must be less than 50 characters
+            valid=false;
+        }
+        if(this.lede.length()>100){
+            //Lede must be less than 100 characters
+            valid=false;
+        }
+        if(this.text.length()>200){
+            //text must be less than 200 characters
+            valid=false;
+        }   
+        return valid;
+    }
+    
+    //Returns relevant error message if NewsItem is not valid
+    public String validateMessage(){
+        String msg="";
+        if(this.heading.length()>50){
+            //Heading must be less than 50 characters
+            msg=msg+"Otsikko saa olla enintään 50 merkkiä pitkä. ";
+        }
+        if(this.lede.length()>100){
+            //Lede must be less than 100 characters
+            msg=msg+"Ingressi saa olla enintään 100 merkkiä pitkä. ";
+        }
+        if(this.text.length()>200){
+            //text must be less than 200 characters
+            msg=msg+"Teksti saa olla enintään 200 merkkiä pitkä. ";
+        }   
+        return msg;
+    }
+    
 
 }
