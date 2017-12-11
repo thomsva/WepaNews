@@ -51,7 +51,7 @@ public class NewsItemController {
     private HitRepository hitRepository;
 
     private void calculatePopular() {
-        for (NewsItem newsItem :newsItemRepository.findByApproved(true)){
+        for (NewsItem newsItem : newsItemRepository.findByApproved(true)) {
             newsItem.calculatePopular();
             newsItemRepository.save(newsItem);
         }
@@ -72,10 +72,7 @@ public class NewsItemController {
         return "index";
     }
 
-    
-    
-    
-    //Show newsitem and save a pageview in "Hits"
+    //Front page: Show NewsItem and save a pageview in "Hits"
     @Transactional
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
@@ -97,6 +94,7 @@ public class NewsItemController {
         return "index";
     }
 
+    //Front page: Show list filtered by category
     @Transactional
     @GetMapping("/listbycategory/{id}")
     public String listByCategory(Model model, @PathVariable Long id) {
@@ -111,6 +109,7 @@ public class NewsItemController {
         return "index";
     }
 
+    //Front page: Show list filtered by DateTime
     @Transactional
     @GetMapping("/listnewest")
     public String listNewest(Model model) {
@@ -125,6 +124,7 @@ public class NewsItemController {
         return "index";
     }
 
+    //Front page: Show list filtered by most popular in past 7 days
     @Transactional
     @GetMapping("/listbyweeklyhits")
     public String listByWeeklyHits(Model model) {
@@ -139,6 +139,15 @@ public class NewsItemController {
         return "index";
     }
 
+    //Get picture attached to NewsItem
+    @Transactional
+    @GetMapping(path = "/newsitem/{id}/picture", produces = "image/jpg")
+    @ResponseBody
+    public byte[] getPicture(@PathVariable Long id) {
+        return newsItemRepository.getOne(id).getPicture();
+    }
+
+    //Dashboard: Show NewsItems
     @Transactional
     @GetMapping("/newsitem")
     public String showNewsItems(Model model) {
@@ -154,15 +163,11 @@ public class NewsItemController {
         }
     }
 
+    //Dashboard: Add new NewsItem
     @Transactional
-    @GetMapping(path = "/newsitem/{id}/picture", produces = "image/jpg")
-    @ResponseBody
-    public byte[] getPicture(@PathVariable Long id) {
-        return newsItemRepository.getOne(id).getPicture();
-    }
-
     @PostMapping("/newsitem")
     public String addNewsItem(
+            RedirectAttributes redirectAttributes,
             @RequestParam String heading,
             @RequestParam("picture") MultipartFile picture,
             @RequestParam String lede,
@@ -178,33 +183,61 @@ public class NewsItemController {
         }
         newsItem.setApproved(false);
         newsItem.setDateTime(LocalDateTime.now());
-
         newsItemRepository.save(newsItem);
+        redirectAttributes.addFlashAttribute("message", "Uutinen lisätty!");
         return "redirect:/newsitem";
 
     }
 
+    //Dashboard: Update contents of a NewsItem
+    @Transactional
+    @PostMapping("/newsitem/{id}")
+    public String editNewsItem(
+            RedirectAttributes redirectAttributes,
+            @PathVariable Long id,
+            @RequestParam String heading,
+            @RequestParam("picture") MultipartFile picture,
+            @RequestParam String lede,
+            @RequestParam String text) throws IOException {
+        NewsItem newsItem = newsItemRepository.getOne(id);
+        newsItem.setHeading(heading);
+        if (!picture.isEmpty()) {
+            newsItem.setPicture(picture.getBytes());
+        }
+        newsItem.setLede(lede);
+        newsItem.setText(text);
+        Author a = authenticationService.authorSignedIn();
+        newsItem.setApproved(false);
+        newsItemRepository.save(newsItem);
+        redirectAttributes.addFlashAttribute("message", "Uutinen päivitetty!");
+        return "redirect:/newsitem";
+    }
+
+    //Dashboard: Remove author from a NewsItem
     @Transactional
     @DeleteMapping("/newsitem/{newsId}/author/{authorId}")
     public String removeAuthorFromNewsItem(
             RedirectAttributes redirectAttributes,
             @PathVariable Long newsId,
             @PathVariable Long authorId) {
-
         NewsItem n = newsItemRepository.getOne(newsId);
         List<Author> a = n.getAuthors();
-        for (int i = 0; i < a.size(); i++) {
-            if (Objects.equals(a.get(i).getId(), authorId)) {
-                newsItemRepository.getOne(newsId).getAuthors().remove(i);
+        if (a.size() == 1) {
+            redirectAttributes.addFlashAttribute("error", "Poisto ei onnistunut. Artikkelilla on oltava vähintään yksi kirjoittaja");
+        } else {
+            for (int i = 0; i < a.size(); i++) {
+                if (Objects.equals(a.get(i).getId(), authorId)) {
+                    newsItemRepository.getOne(newsId).getAuthors().remove(i);
+                }
             }
+            newsItemRepository.save(n);
+            redirectAttributes.addFlashAttribute("message", "Kirjoittajan poisto artikkelista onnistui!");
         }
-        newsItemRepository.save(n);
-        redirectAttributes.addFlashAttribute("message", "Kirjoittajan poisto artikkelista onnistui!");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
-
         return "redirect:/newsitem";
     }
 
+    //Dashboard: Add author to NewsItem
     @Transactional
     @PostMapping("/newsitem/{newsId}/author")
     public String addAuthorToNewsItem(
@@ -220,6 +253,7 @@ public class NewsItemController {
 
     }
 
+    //Dashboard: Remove Category from NewsItem
     @Transactional
     @DeleteMapping("/newsitem/{newsId}/category/{categoryId}")
     public String removeCategoryFromNewsItem(
@@ -229,23 +263,19 @@ public class NewsItemController {
 
         NewsItem n = newsItemRepository.getOne(newsId);
         List<Category> c = n.getCategories();
-        if (c.size() == 1) {
-            redirectAttributes.addFlashAttribute("error", "Ainutta kirjoittajaa ei voi poistaa.");
-        } else {
-            for (int i = 0; i < c.size(); i++) {
-                if (Objects.equals(c.get(i).getId(), categoryId)) {
-                    newsItemRepository.getOne(newsId).getCategories().remove(i);
-                    break;
-                }
+        for (int i = 0; i < c.size(); i++) {
+            if (Objects.equals(c.get(i).getId(), categoryId)) {
+                newsItemRepository.getOne(newsId).getCategories().remove(i);
+                break;
             }
-            newsItemRepository.save(n);
-            redirectAttributes.addFlashAttribute("message", "Kategorian poisto artikkelista onnistui!");
         }
+        newsItemRepository.save(n);
+        redirectAttributes.addFlashAttribute("message", "Kategorian poisto artikkelista onnistui!");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
-
         return "redirect:/newsitem";
     }
 
+    //Dashboard: Add Category to NewsItem
     @Transactional
     @PostMapping("/newsitem/{newsId}/category")
     public String addCategoryToNewsItem(
@@ -261,6 +291,7 @@ public class NewsItemController {
 
     }
 
+    //Dashboard: Delete NewsItem
     @DeleteMapping("/newsitem/{id}")
     public String removeNewsItem(
             RedirectAttributes redirectAttributes,
@@ -269,9 +300,9 @@ public class NewsItemController {
         redirectAttributes.addFlashAttribute("message", "Uutinen poistettiin.");
         redirectAttributes.addFlashAttribute("authorSignedIn", authenticationService.authorSignedIn());
         return "redirect:/newsitem/";
-
     }
 
+    //Dashboard: Toggle approval status for NewsItem
     @Transactional
     @PostMapping("/newsitem/{id}/approve")
     public String toggleNewsItemApproval(

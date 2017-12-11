@@ -13,42 +13,66 @@
 
 
 
-        <h1>Write news</h1>      
-        <p>
-            Kirjoita uutinen ja täytä tiedot alla oleviin kenttiin. 
-            Valitse tarvittaessa useita kirjoittajia ja useita kategorioita
-            pitämällä CTRL painettuna. 
-        </p>
+        <!-- Trigger the modal with a button -->
+        <button class="btn btn-default" data-toggle="modal" data-target="#addNewsForm"><span class="glyphicon glyphicon-plus"></span> Lisää uusi uutinen</button>
+        <!-- Modal -->
+        <div class="modal fade" th:id="addNewsForm" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Lisää uutinen</h4>
+                        <p>
+                            Kirjoita uutinen ja täytä tiedot alla oleviin kenttiin. Uusi uutinen 
+                            lisätään järjestelmään hyväksymättömänä. Uutinen julkaistaan hyväksynnän jälkeen. 
+                            Uutiseen voi lisätä kirjoittajia ja kategorioita uutisen tallentamisen jälkeen.
+
+                        </p>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/newsitem" method="POST" enctype="multipart/form-data" >
+
+                            <table class="table">
+                                <tr>
+                                    <td>Heading</td>
+                                    <td><input class="form-control"type="text" name="heading" id="heading"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Lede</td>
+                                    <td><input class="form-control" type="text" name="lede" id="lede"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Text</td>
+                                    <td>
+                                        <textarea class="form-control" rows="5" name="text" id="text"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Picture</td>
+                                    <td><input class="form-control" type="file" name="picture" id="picture" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input type="submit" value="Lähetä" class="btn"/></td>
+                                </tr>
+
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
-        <form action="/newsitem" method="POST" enctype="multipart/form-data" >
 
-            <table class="table">
-                <tr>
-                    <td>Heading</td>
-                    <td><input class="form-control"type="text" name="heading" id="heading"/></td>
-                </tr>
-                <tr>
-                    <td>Lede</td>
-                    <td><input class="form-control" type="text" name="lede" id="lede"/></td>
-                </tr>
-                <tr>
-                    <td>Text</td>
-                    <td>
-                        <textarea class="form-control" rows="5" name="text" id="text"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Picture</td>
-                    <td><input class="form-control" type="file" name="picture" id="picture" /></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" value="Lähetä" class="btn"/></td>
-                </tr>
 
-            </table>
-        </form>
+
+
+
+
+
 
         <h1>Lista uutisista</h1>
         <table class="table table-bordered">
@@ -168,20 +192,82 @@
                     <span th:if="${authorSignedIn != null}">
                         <!--Approve =publish-->
                         <form  th:if="${authorSignedIn.chiefEditor&&newsItem.approved==false}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
-                            <button class="btn btn-default btn-xs btn-block">Hyväksy</button>
+                            <button class="btn btn-default btn-xs btn-block"><span class="glyphicon glyphicon-ok"></span> Hyväksy</button>
                         </form>
 
                         <!--Revoke-->
                         <form th:if="${authorSignedIn.chiefEditor&&newsItem.approved}" th:action="${'/newsitem/' + newsItem.id + '/approve'}" th:method="POST">      
-                            <button class="btn btn-default btn-xs btn-block">Poista hyväksyntä</button>
+                            <button class="btn btn-default btn-xs btn-block"><span class="glyphicon glyphicon-remove"></span> Poista hyväksyntä</button>
                         </form>
-                        
+
                         <!--Delete-->
                         <form th:if="${authorSignedIn.chiefEditor==true}" th:action="${'/newsitem/' + newsItem.id}" th:method="DELETE">      
-                            <button class="btn btn-default btn-xs btn-block">Poista uutinen</button>
+                            <button class="btn btn-default btn-xs btn-block"><span class="glyphicon glyphicon-trash"></span> Poista uutinen</button>
                         </form>
-                        
-                        
+
+                        <!--Edit-->
+                        <!-- Trigger the modal with a button -->
+                        <button th:if="${authorSignedIn.chiefEditor}" class="btn btn-default btn-xs btn-block" data-toggle="modal" th:data-target="${'#editNewsForm'+newsItem.id}"><span class="glyphicon glyphicon-edit"></span> Muokkaa</button>
+                        <!-- Modal -->
+                        <div class="modal fade" th:id="${'editNewsForm'+newsItem.id}" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Muokkaa uutista</h4>
+                                        <p>
+                                            Muokkaa uutista ja valitse Lähtetä. 
+
+                                        </p>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="${'/newsitem/'+newsItem.id}" method="POST" enctype="multipart/form-data" >
+                                            <input class="form-control" type="hidden" name="id" th:value="${newsItem.id}"/>
+
+                                            <table class="table">
+                                                <tr>
+                                                    <td>Heading</td>
+                                                    <td><input class="form-control" type="text" name="heading" id="heading" th:value="${newsItem.heading}"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lede</td>
+                                                    <td><input class="form-control" type="text" name="lede" id="lede" th:value="${newsItem.lede}"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Text</td>
+                                                    <td>
+                                                        <textarea class="form-control" rows="5" name="text" id="text" th:text="${newsItem.text}"></textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nykyinen kuva</td>
+                                                    <td>
+                                                        <div style="height: 100px;">
+                                                            <div class="mh-100" style="width: 100px; height: 200px;">
+                                                                <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Korvaa kuva</td>
+                                                    <td><input class="form-control" type="file" name="picture" id="picture" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><input type="submit" value="Lähetä" class="btn"/></td>
+                                                </tr>
+
+                                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                     </span>
 
 
