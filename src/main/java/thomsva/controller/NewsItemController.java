@@ -65,7 +65,6 @@ public class NewsItemController {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
         Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
         calculatePopular();
-
         model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
@@ -78,14 +77,12 @@ public class NewsItemController {
     public String showNewsItem(Model model, @PathVariable Long id) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
         Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
-        calculatePopular();
         NewsItem selectedNewsItem = newsItemRepository.getOne(id);
         Hit hit = new Hit();
         hit.setNewsItem(selectedNewsItem);
         hit.setDateTime(LocalDateTime.now());
         hitRepository.save(hit);
-
-        newsItemRepository.save(selectedNewsItem);
+        calculatePopular();        
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
         model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
