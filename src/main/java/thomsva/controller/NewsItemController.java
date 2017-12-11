@@ -46,43 +46,53 @@ public class NewsItemController {
 
     @Autowired
     private AuthenticationService authenticationService;
-    
+
     @Autowired
     private HitRepository hitRepository;
+
+    private void calculatePopular() {
+        for (NewsItem newsItem :newsItemRepository.findByApproved(true)){
+            newsItem.calculatePopular();
+            newsItemRepository.save(newsItem);
+        }
+    }
 
     //Front page
     @GetMapping("/")
     public String showFrontpage(Model model) {
         Pageable pageableNewTop5 = PageRequest.of(0, 5, Sort.Direction.DESC, "dateTime");
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
+        calculatePopular();
 
         model.addAttribute("newsItemsNewTop5", newsItemRepository.findByApproved(true, pageableNewTop5));
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
-        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
         return "index";
     }
 
+    
+    
+    
     //Show newsitem and save a pageview in "Hits"
     @Transactional
     @GetMapping("/{id}")
     public String showNewsItem(Model model, @PathVariable Long id) {
         Pageable pageableNewTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "dateTime");
-        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "hits");
+        Pageable pageableHitsTop25 = PageRequest.of(0, 20, Sort.Direction.DESC, "popular");
+        calculatePopular();
         NewsItem selectedNewsItem = newsItemRepository.getOne(id);
-        Hit hit=new Hit();
+        Hit hit = new Hit();
         hit.setNewsItem(selectedNewsItem);
         hit.setDateTime(LocalDateTime.now());
         hitRepository.save(hit);
-        
+
         newsItemRepository.save(selectedNewsItem);
         model.addAttribute("newsItemsNewTop25", newsItemRepository.findByApproved(true, pageableNewTop25));
-        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findByApproved(true, pageableHitsTop25));
+        model.addAttribute("newsItemsHitsTop25", newsItemRepository.findAll(pageableHitsTop25));
         model.addAttribute("selectedNewsItem", selectedNewsItem);
         model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("hits1minute",hitRepository.findByDateTimeAfter(LocalDateTime.now().minusMinutes(1)));
-        model.addAttribute("hits1minutethis",hitRepository.findByNewsItemAndDateTimeAfter(selectedNewsItem, LocalDateTime.now().minusMinutes(1)));
+
         return "index";
     }
 

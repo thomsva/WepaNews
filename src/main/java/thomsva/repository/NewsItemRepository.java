@@ -12,9 +12,8 @@ import thomsva.domain.NewsItem;
 public interface NewsItemRepository extends JpaRepository<NewsItem, Long> {
     
     List<NewsItem> findByDateTime(LocalDateTime dateTime);
-    
+    List<NewsItem> findByApproved(Boolean approved);
     List<NewsItem> findByApproved(Boolean approved, Pageable pageable);
-    
-    
-    
+    List<NewsItem> findByPopular(Long popular);
+
 }

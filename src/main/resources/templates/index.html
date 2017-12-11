@@ -59,10 +59,11 @@
                             <a th:href="${'/listbycategory/'+category.id}" th:text="${category.name}"></a>
                         </span>
                     </p>
-                    <p class="small"><span th:text="${'Luettu '+ #lists.size(selectedNewsItem.Hits) + ' kertaa'}"></span></p>
-                    <p>1min all: <span th:text="${#lists.size(hits1minute)}"></span></p>
-                    <p>1min this: <span th:text="${#lists.size(hits1minutethis)}"></span></p>
+
+                    <p class="small"><span th:text="${'Luettu yhteensä'+ #lists.size(selectedNewsItem.Hits) + ' kertaa.'}"></span></p>
+                    <p class="small"><span th:text="${'Luettu '+ selectedNewsItem.popular + ' kertaa viimeisen 7 päivän aikana.'}"></span></p>
                     
+
 
 
                 </div>
