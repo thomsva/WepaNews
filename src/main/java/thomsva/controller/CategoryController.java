@@ -1,6 +1,7 @@
 
 package thomsva.controller;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ public class CategoryController {
     @Autowired
     private AuthenticationService authenticationService;
     
+    @Transactional
     @GetMapping("/category")
     public String showCategories(Model model) {
         model.addAttribute("category", new Category());

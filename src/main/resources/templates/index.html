@@ -17,16 +17,16 @@
                 <div class="jumbotron" th:if="${selectedNewsItem == null && newsItemList == null}">
                     <h3>Viimeisimmät uutiset</h3>      
                     <table class="table table-bordered">
-                        <tr>
-                            <td th:each="newsItem : ${newsItemsNewTop5}">
+                        <tr th:each="newsItem : ${newsItemsNewTop5}">
+                            <td>
                                 <h2 th:text="${newsItem.heading}"></h2>
                                 <span th:text="${newsItem.lede}"></span>
-                                <div style="height: 100px;">
-                                    <div class="mh-100" style="width: 100px; height: 200px;">
-                                        <a th:href="${'/'+newsItem.id}">
-                                            <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
-                                        </a>
-                                    </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a th:href="${'/'+newsItem.id}">
+                                        <img th:src="${'/newsitem/'+ newsItem.id +'/picture'}" class="mh-100 img-thumbnail ">
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -62,7 +62,7 @@
 
                     <p class="small"><span th:text="${'Luettu yhteensä'+ #lists.size(selectedNewsItem.Hits) + ' kertaa.'}"></span></p>
                     <p class="small"><span th:text="${'Luettu '+ selectedNewsItem.popular + ' kertaa viimeisen 7 päivän aikana.'}"></span></p>
-                    
+
 
 
 
